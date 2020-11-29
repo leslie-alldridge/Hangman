@@ -7,12 +7,10 @@ namespace Hangman
 {
     class Program
     {
-        bool _playGame = true;
-
         static void Main(string[] args)
         {
-            var Program = new Program();
-            while (Program._playGame)
+            var playgame = true;
+            while (playgame)
             {
 
                 WriteLine("Would you like to play a game of Hangman? y/n");
@@ -102,18 +100,18 @@ namespace Hangman
                         var exitGame = ReadLine();
                         if (exitGame.ToLower() == 'q'.ToString())
                         {
-                            Program._playGame = false;
+                            playgame = false;
                         }
 
                         else
                         {
-                            Program._playGame = true;
+                            playgame = true;
                         }
                     }
                 }
                 else
                 {
-                    Program._playGame = false;
+                    playgame = false;
                     WriteLine("Exiting...");
                 }
 
