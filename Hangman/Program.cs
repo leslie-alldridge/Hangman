@@ -23,7 +23,7 @@ namespace Hangman
                 {
                     WriteLine("Genrating a word... please wait");
 
-                    var wordList = new List<string>() { "Abacus", "Triangle", "Car", "Airline" };
+                    var wordList = new List<string>() { "Abacus", "Triangle", "Car", "Airline",  "Tree", "Population" };
 
                     var failurePhrases = new List<string>(){
                     "Draw and upside-down L This is the post the man hangs from.",
@@ -67,13 +67,13 @@ namespace Hangman
                         if (validatedGuess && answer.Contains(guess.ToLower()))
                         {
                             WriteLine($"You guessed: {guess} correctly!");
+
                             int idx = 0;
                             while ((idx = answer.IndexOf(guess, idx)) != -1)
                             {
                                 currentStatus[idx] = guess;
                                 idx++;
                             }
-                            //var idx = answer.IndexOf(guess);
 
                             WriteLine(String.Join("", currentStatus));
 
@@ -114,7 +114,6 @@ namespace Hangman
                     playgame = false;
                     WriteLine("Exiting...");
                 }
-
             }
         }
     }
