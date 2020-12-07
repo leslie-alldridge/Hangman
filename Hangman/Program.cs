@@ -91,6 +91,7 @@ namespace Hangman
 
                 if (incorrectGuesses == FailurePhrasesList.Count())
                 {
+                    WriteLine($"The correct answer was: {answer}.");
                     WriteLine("Game over, better luck next time. Type q to quit or press any key to continue.");
                 }
                 else
