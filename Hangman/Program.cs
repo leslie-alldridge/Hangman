@@ -38,12 +38,12 @@ namespace Hangman
                     break;
                 }
                 
-                var failures = 0;
+                var incorrectGuesses = 0;
                 var index = randomNumber.Next(0, WordList.Count());
                 var answer = WordList.ElementAt(index).ToLower();
                 var currentGuesses = new string[answer.Length];
 
-                while (failures < FailurePhrasesList.Count())
+                while (incorrectGuesses < FailurePhrasesList.Count())
                 {
                     WriteLine();
                     WriteLine("Please guess a letter:");
@@ -83,13 +83,13 @@ namespace Hangman
                     }
                     else
                     {
-                        WriteLine($"{FailurePhrasesList.ElementAt(failures)}");
-                        failures++;
-                        WriteLine($"{FailurePhrasesList.Count() - failures} lives remain");
+                        WriteLine($"{FailurePhrasesList.ElementAt(incorrectGuesses)}");
+                        incorrectGuesses++;
+                        WriteLine($"{FailurePhrasesList.Count() - incorrectGuesses} lives remain");
                     }
                 }
 
-                if (failures == FailurePhrasesList.Count())
+                if (incorrectGuesses == FailurePhrasesList.Count())
                 {
                     WriteLine("Game over, better luck next time. Type q to quit or press any key to continue.");
                 }
