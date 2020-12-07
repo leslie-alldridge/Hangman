@@ -8,10 +8,10 @@ namespace Hangman
 {
     internal class Program
     {
-        private static readonly List<string> WordList = new List<string>()
+        private static readonly IEnumerable<string> WordList = new[]
             {"Abacus", "Triangle", "Car", "Airline", "Tree", "Population"};
 
-        private static readonly List<string> FailurePhrasesList = new List<string>()
+        private static readonly IEnumerable<string> FailurePhrasesList = new []
         {
             "Draw and upside-down L This is the post the man hangs from.",
             "Draw a small circle for the head underneath the horizontal line of the L.",
@@ -25,33 +25,25 @@ namespace Hangman
 
         private static void Main()
         {
-            var playGame = true;
-            // Generate a random number to choose a word
-            var rnd = new Random();
+            var randomNumber = new Random();
 
-            while (playGame)
+            while (true)
             {
                 WriteLine("Would you like to play a game of Hangman? y/n");
 
                 var input = ReadKey().KeyChar.ToString();
 
-                if (input.ToLower() == "y")
+                if (input.ToLower() != "y")
                 {
-                    WriteLine("Generating a word... please wait");
-                }
-                else
-                {
-                    WriteLine(" - Exiting Game..");
                     break;
                 }
                 
                 var failures = 0;
-                // Generate random number and select an answer
-                var index = rnd.Next(0, WordList.Count);
-                var answer = WordList[index].ToLower();
+                var index = randomNumber.Next(0, WordList.Count());
+                var answer = WordList.ElementAt(index).ToLower();
                 var currentGuesses = new string[answer.Length];
 
-                while (failures < FailurePhrasesList.Count)
+                while (failures < FailurePhrasesList.Count())
                 {
                     WriteLine();
                     WriteLine("Please guess a letter:");
@@ -91,13 +83,13 @@ namespace Hangman
                     }
                     else
                     {
-                        WriteLine($"{FailurePhrasesList[failures]}");
-                        WriteLine($"{FailurePhrasesList.Count - failures} lives remain");
+                        WriteLine($"{FailurePhrasesList.ElementAt(failures)}");
                         failures++;
+                        WriteLine($"{FailurePhrasesList.Count() - failures} lives remain");
                     }
                 }
 
-                if (failures == FailurePhrasesList.Count)
+                if (failures == FailurePhrasesList.Count())
                 {
                     WriteLine("Game over, better luck next time. Type q to quit or press any key to continue.");
                 }
@@ -107,7 +99,11 @@ namespace Hangman
                 }
 
                 var exitGame = ReadKey();
-                playGame = exitGame.KeyChar.ToString().ToLower() != 'q'.ToString();
+
+                if (exitGame.Key == ConsoleKey.Q)
+                {
+                    break;
+                }
             }
         }
     }
