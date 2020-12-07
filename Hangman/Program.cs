@@ -25,22 +25,16 @@ namespace Hangman
 
         private static void Main()
         {
-            var playGame = true;
             var randomNumber = new Random();
 
-            while (playGame)
+            while (true)
             {
                 WriteLine("Would you like to play a game of Hangman? y/n");
 
                 var input = ReadKey().KeyChar.ToString();
 
-                if (input.ToLower() == "y")
+                if (input.ToLower() != "y")
                 {
-                    WriteLine("Generating a word... please wait");
-                }
-                else
-                {
-                    WriteLine(" - Exiting Game..");
                     break;
                 }
                 
@@ -89,8 +83,8 @@ namespace Hangman
                     }
                     else
                     {
-                        failures++;
                         WriteLine($"{FailurePhrasesList.ElementAt(failures)}");
+                        failures++;
                         WriteLine($"{FailurePhrasesList.Count() - failures} lives remain");
                     }
                 }
@@ -105,7 +99,11 @@ namespace Hangman
                 }
 
                 var exitGame = ReadKey();
-                playGame = exitGame.KeyChar.ToString().ToLower() != 'q'.ToString();
+
+                if (exitGame.Key == ConsoleKey.Q)
+                {
+                    break;
+                }
             }
         }
     }
