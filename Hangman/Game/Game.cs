@@ -6,8 +6,9 @@ namespace Hangman
 {
     class Game : IGame
     {
-        public IEnumerable<string> FailurePhrasesList { get; set; }
         public IEnumerable<string> WordList { get; set; }
+        public IEnumerable<string> FailurePhrasesList { get; set; }
+        public int LivesRemaining { get; set; }
         public int Guesses
         {
             get
@@ -21,8 +22,10 @@ namespace Hangman
         }
         public int IncorrectGuesses { get; set; }
         public int RandomNumber => new Random().Next(0, WordList.Count());
-        public Game()
+        public Game(int numberOfLives)
         {
+            WordList = new[] { "Abacus", "Triangle", "Car", "Airline", "Tree", "Population" };
+
             FailurePhrasesList = new[]
             {
                 "Draw and upside-down L This is the post the man hangs from.",
@@ -35,7 +38,7 @@ namespace Hangman
                 "Connect the head to the post with a noose. You are dead."
             };
 
-            WordList = new[] { "Abacus", "Triangle", "Car", "Airline", "Tree", "Population" };
+            LivesRemaining = numberOfLives;
         }
     }
 }
