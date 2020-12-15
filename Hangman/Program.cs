@@ -53,7 +53,7 @@ namespace Hangman
                     WriteLine(); // whitespace for key entry
 
                     var isGuessValid = Regex.IsMatch(guess, "[a-zA-Z]");
-                    var isInAnswer = answer.ToCharArray();
+                    var lettersInAnswer = answer.ToCharArray();
 
                     if (isGuessValid && answer.Contains(guess.ToLower()))
                     {
@@ -61,7 +61,7 @@ namespace Hangman
 
                         for (var i = 0; i < answer.Length; i++)
                         {
-                            if (isInAnswer[i].ToString() == guess)
+                            if (lettersInAnswer[i].ToString() == guess)
                             {
                                 currentGuesses[i] = guess;
                             }
