@@ -1,31 +1,15 @@
 ﻿using System;
 using static System.Console;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Hangman
 {
     internal class Program
     {
-        private static readonly IEnumerable<string> WordList = new[]
-            {"Abacus", "Triangle", "Car", "Airline", "Tree", "Population"};
-
-        private static readonly IEnumerable<string> FailurePhrasesList = new []
-        {
-            "Draw and upside-down L This is the post the man hangs from.",
-            "Draw a small circle for the head underneath the horizontal line of the L.",
-            "Draw a line down from the bottom of the head for the body.",
-            "Draw one arm out from the middle of his body for the arm.",
-            "Draw the other arm",
-            "Draw one diagonal line from the bottom of the body for the first leg.",
-            "Draw the other leg.",
-            "Connect the head to the post with a noose. You are dead."
-        };
-
         private static void Main()
         {
-            var randomNumber = new Random();
+            Game game = new Game(8);
 
             while (true)
             {
@@ -37,13 +21,11 @@ namespace Hangman
                 {
                     break;
                 }
-                
-                var incorrectGuesses = 0;
-                var index = randomNumber.Next(0, WordList.Count());
-                var answer = WordList.ElementAt(index).ToLower();
+
+                var answer = game.WordList.ElementAt(game.RandomNumber).ToLower();
                 var currentGuesses = new string[answer.Length];
 
-                while (incorrectGuesses < FailurePhrasesList.Count())
+                while (game.IncorrectGuesses < game.FailurePhrasesList.Count())
                 {
                     WriteLine();
                     WriteLine("Please guess a letter:");
@@ -83,13 +65,13 @@ namespace Hangman
                     }
                     else
                     {
-                        WriteLine($"{FailurePhrasesList.ElementAt(incorrectGuesses)}");
-                        incorrectGuesses++;
-                        WriteLine($"{FailurePhrasesList.Count() - incorrectGuesses} lives remain");
+                        WriteLine($"{game.FailurePhrasesList.ElementAt(game.IncorrectGuesses)}");
+                        game.IncorrectGuesses++;
+                        WriteLine($"{game.FailurePhrasesList.Count() - game.IncorrectGuesses} lives remain");
                     }
                 }
 
-                if (incorrectGuesses == FailurePhrasesList.Count())
+                if (game.IncorrectGuesses == game.FailurePhrasesList.Count())
                 {
                     WriteLine($"The correct answer was: {answer}.");
                     WriteLine("Game over, better luck next time. Type q to quit or press any key to continue.");
@@ -109,4 +91,3 @@ namespace Hangman
         }
     }
 }
-
