@@ -1,34 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Hangman
+namespace Hangman.Game
 {
-    class Game : IGame
+    public class HangmanGame
     {
-        public IEnumerable<string> WordList { get; set; }
-        public IEnumerable<string> FailurePhrasesList { get; set; }
+        public string[] WordList { get; }
+        public string[] FailurePhrasesList { get; }
         public int LivesRemaining { get; set; }
-        public int Guesses
-        {
-            get
-            {
-                return 0;
-            }
-            set
-            {
-                Guesses = value;
-            }
-        }
-        public int IncorrectGuesses { get; set; }
-        public int RandomNumber => new Random().Next(0, WordList.Count());
-        public Game(int numberOfLives)
+        public string Answer { get; set; }
+
+        public List<string> Guesses { get; set; }
+
+        public HangmanGame(int numberOfLives)
         {
             WordList = new[] { "Abacus", "Triangle", "Car", "Airline", "Tree", "Population" };
 
             FailurePhrasesList = new[]
             {
-                "Draw and upside-down L This is the post the man hangs from.",
+                "Draw an upside-down L This is the post the man hangs from.",
                 "Draw a small circle for the head underneath the horizontal line of the L.",
                 "Draw a line down from the bottom of the head for the body.",
                 "Draw one arm out from the middle of his body for the arm.",
@@ -39,6 +29,26 @@ namespace Hangman
             };
 
             LivesRemaining = numberOfLives;
+
+            Answer = WordList[new Random().Next(5)];
+
+            Guesses = new List<string>();
+        }
+
+        public bool IsGuessCorrect(string guess)
+        {
+            if(Answer.Contains(guess))
+            {
+                Guesses.Add(guess);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsGuessUnique(string guess)
+        {
+            return !Guesses.Contains(guess);
         }
     }
 }
