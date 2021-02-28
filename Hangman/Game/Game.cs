@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Hangman.Game
 {
@@ -30,16 +31,37 @@ namespace Hangman.Game
 
             LivesRemaining = numberOfLives;
 
-            Answer = WordList[new Random().Next(5)];
+            Answer = WordList[new Random().Next(5)].ToLower();
 
             Guesses = new List<string>();
+
         }
+
+        internal string GenerateGameState()
+        {
+            var builder = new StringBuilder();
+
+            foreach (char c in Answer)
+            {
+                if (Guesses.Contains(c.ToString()))
+                {
+                    builder.Append(c);
+                }
+                else
+                {
+                    builder.Append("_ ");
+                }
+            }
+
+            Console.WriteLine($"\n{builder}");
+            return builder.ToString();
+        } // this can go into the method below...
 
         public bool IsGuessCorrect(string guess)
         {
-            if(Answer.Contains(guess))
+            if (Answer.Contains(guess))
             {
-                Guesses.Add(guess);
+                Guesses.Add(guess.ToLower());
                 return true;
             }
 
@@ -53,7 +75,7 @@ namespace Hangman.Game
 
         public void ReduceLivesRemaining()
         {
-            LivesRemaining -= 1 ;
+            LivesRemaining -= 1;
         }
     }
 }
