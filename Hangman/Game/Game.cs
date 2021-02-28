@@ -50,5 +50,10 @@ namespace Hangman.Game
         {
             return !Guesses.Contains(guess);
         }
+
+        public void ReduceLivesRemaining()
+        {
+            LivesRemaining -= 1 ;
+        }
     }
 }

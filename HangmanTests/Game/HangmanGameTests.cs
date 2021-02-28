@@ -79,6 +79,15 @@ namespace Hangman.UnitTests.Game
             Assert.Contains(result.Guesses[0], "a");
         }
 
+        [Fact]
+        public void Incorrect_guess_reduces_lives_remaining()
+        {
+            var result = GenerateTestGame(DefaultNumberOfLives, "Bad");
+
+            result.ReduceLivesRemaining();
+            Assert.Equal(3, result.LivesRemaining);
+        }
+
         private HangmanGame GenerateTestGame(int numberOfLives, string answer)
         {
             var game = new HangmanGame(numberOfLives)
