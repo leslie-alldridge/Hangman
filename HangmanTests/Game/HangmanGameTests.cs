@@ -1,5 +1,7 @@
-﻿using Xunit;
-using Hangman.Game;
+﻿using Hangman.Game;
+using Xunit;
+using System;
+using System.IO;
 
 namespace Hangman.UnitTests.Game
 {
@@ -15,13 +17,9 @@ namespace Hangman.UnitTests.Game
         public void Game_starts_given_a_number_of_lives(int numberOfLives)
         {
             var game = new HangmanGame(numberOfLives);
-            Assert.Equal(numberOfLives, game.LivesRemaining);
-        }
 
-        [Fact]
-        public void Game_contains_failure_phrases()
-        {
-            Assert.NotNull(DefaultGame.FailurePhrasesList);
+            Assert.Equal(numberOfLives, game.LivesRemaining);
+            Assert.True(game.Answer.Length > 0);
         }
 
         [Fact]
@@ -34,9 +32,9 @@ namespace Hangman.UnitTests.Game
         public void Can_evaluate_a_correct_guess()
         {
             var result = GenerateTestGame(DefaultNumberOfLives, "Cooktop");
-            var guess = result.IsGuessCorrect("o");
+            var isCorrect = result.IsGuessCorrect("o");
 
-            Assert.True(guess);
+            Assert.True(isCorrect);
             Assert.NotEmpty(result.AllGuesses);
             Assert.Contains("o", result.CorrectGuesses.ToString());
         }
@@ -45,9 +43,10 @@ namespace Hangman.UnitTests.Game
         public void Can_evaluate_an_incorrect_guess()
         {
             var result = GenerateTestGame(DefaultNumberOfLives, "Bad");
-            var guess = result.IsGuessCorrect("o");
+            var isCorrect = result.IsGuessCorrect("o");
 
-            Assert.False(guess);
+            Assert.False(isCorrect);
+            Assert.Contains("o", result.AllGuesses);
             Assert.Equal(string.Empty, result.CorrectGuesses.ToString());
         }
 
@@ -68,13 +67,12 @@ namespace Hangman.UnitTests.Game
 
             var isValidGuess = result.IsGuessUnique("a");
             result.IsGuessCorrect("a");
-
+            
             Assert.True(isValidGuess);
 
             result.IsGuessCorrect("a");
             isValidGuess = result.IsGuessUnique("a");
-
-
+            
             Assert.False(isValidGuess);
             Assert.Contains(result.CorrectGuesses[0], "a");
         }
@@ -86,6 +84,27 @@ namespace Hangman.UnitTests.Game
 
             result.ReduceLivesRemaining();
             Assert.Equal(3, result.LivesRemaining);
+        }
+
+        [Fact]
+        public void Game_state_prints_to_console()
+        {
+            var result = GenerateTestGame(DefaultNumberOfLives, "cooktop");
+            result.IsGuessCorrect("o");
+
+            var output = new StringWriter();
+            Console.SetOut(output);
+
+            result.PrintGameState();
+
+            Assert.Contains("_ oo_ _ o_",output.ToString());
+
+            result.IsGuessCorrect("c");
+            result.IsGuessCorrect("k");
+
+            result.PrintGameState();
+
+            Assert.Contains("cook_ o_", output.ToString());
         }
 
         private HangmanGame GenerateTestGame(int numberOfLives, string answer)
