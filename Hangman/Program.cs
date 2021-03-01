@@ -1,93 +1,83 @@
 ﻿using System;
-using static System.Console;
-using System.Text.RegularExpressions;
-using System.Linq;
 
-namespace Hangman
+namespace Hangman.Game
 {
-    internal class Program
+    public class Program
     {
-        private static void Main()
+        public static void Main()
         {
-            Game game = new Game(8);
-
             while (true)
             {
-                WriteLine("Would you like to play a game of Hangman? y/n");
 
-                var input = ReadKey().KeyChar.ToString();
+                Console.WriteLine("Welcome to Hangman. Enter lives or type q to quit:");
 
-                if (input.ToLower() != "y")
+                var input = Console.ReadLine();
+
+                if (input == "q")
                 {
+                    // User has requested to quit the game
                     break;
                 }
 
-                var answer = game.WordList.ElementAt(game.RandomNumber).ToLower();
-                var currentGuesses = new string[answer.Length];
+                var validator = new InputValidator();
+                var numberOfLives = validator.ValidateInput(input);
 
-                while (game.IncorrectGuesses < game.FailurePhrasesList.Count())
+                var game = new HangmanGame(numberOfLives);
+
+                if (numberOfLives > 0)
                 {
-                    WriteLine();
-                    WriteLine("Please guess a letter:");
 
-                    var keyPress = ReadKey();
-                    var guess = keyPress.KeyChar.ToString();
-                    WriteLine(); // whitespace for key entry
 
-                    var isGuessValid = Regex.IsMatch(guess, "[a-zA-Z]");
-                    var lettersInAnswer = answer.ToCharArray();
-
-                    if (isGuessValid && answer.Contains(guess.ToLower()))
+                    while (game.LivesRemaining > 0)
                     {
-                        WriteLine($"You guessed: {guess} correctly!");
-
-                        for (var i = 0; i < answer.Length; i++)
+                        if (game.IsGameWon())
                         {
-                            if (lettersInAnswer[i].ToString() == guess)
-                            {
-                                currentGuesses[i] = guess;
-                            }
-                            else if (currentGuesses[i] == null)
-                            {
-                                currentGuesses[i] = "_";
-                            }
-                        }
+                            Console.WriteLine($"\nYou have guessed {game.Answer} correctly!");
 
-                        foreach (var c in currentGuesses)
-                        {
-                            Write(c);
-                        }
-
-                        if (!currentGuesses.Contains("_"))
-                        {
                             break;
                         }
-                    }
-                    else
-                    {
-                        WriteLine($"{game.FailurePhrasesList.ElementAt(game.IncorrectGuesses)}");
-                        game.IncorrectGuesses++;
-                        WriteLine($"{game.FailurePhrasesList.Count() - game.IncorrectGuesses} lives remain");
-                    }
-                }
 
-                if (game.IncorrectGuesses == game.FailurePhrasesList.Count())
-                {
-                    WriteLine($"The correct answer was: {answer}.");
-                    WriteLine("Game over, better luck next time. Type q to quit or press any key to continue.");
+                        Console.WriteLine("\nPlease guess a letter:");
+
+                        var guess = Console.ReadKey().KeyChar.ToString();
+                        var isUnique = game.IsGuessUnique(guess);
+
+                        if (isUnique)
+                        {
+                            var isCorrect = game.IsGuessCorrect(guess);
+
+                            if (isCorrect)
+                            {
+                                Console.WriteLine($"\nYou correctly guessed: {guess}");
+                                game.PrintGameState();
+                            }
+                            else
+                            {
+                                game.ReduceLivesRemaining();
+
+                                // Has the player run out of lives?
+                                if (game.LivesRemaining == 0)
+                                {
+                                    Console.WriteLine($"\nYou've run out of lives. The answer was: {game.Answer}.");
+
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"\n{guess} was not correct. {game.LivesRemaining} lives remain.");
+                                    game.PrintGameState();
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    WriteLine($"Congratulations! You guessed {answer} correctly. Type q to quit or press any key to continue.");
-                }
-
-                var exitGame = ReadKey();
-
-                if (exitGame.Key == ConsoleKey.Q)
-                {
-                    break;
+                    Console.WriteLine("Please enter a valid number.");
                 }
             }
+
+            Console.WriteLine("Closing game...");
         }
     }
 }
