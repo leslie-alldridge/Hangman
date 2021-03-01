@@ -2,7 +2,7 @@
 
 namespace Hangman.Game
 {
-    public static class Program
+    public class Program
     {
         public static void Main()
         {
@@ -19,11 +19,14 @@ namespace Hangman.Game
                     break;
                 }
 
-                var isInputValid = int.TryParse(input, out int numberOfLives);
+                var validator = new InputValidator();
+                var numberOfLives = validator.ValidateInput(input);
 
-                if (isInputValid)
+                var game = new HangmanGame(numberOfLives);
+
+                if (numberOfLives > 0)
                 {
-                    var game = new HangmanGame(numberOfLives);
+
 
                     while (game.LivesRemaining > 0)
                     {

@@ -67,12 +67,12 @@ namespace Hangman.UnitTests.Game
 
             var isValidGuess = result.IsGuessUnique("a");
             result.IsGuessCorrect("a");
-            
+
             Assert.True(isValidGuess);
 
             result.IsGuessCorrect("a");
             isValidGuess = result.IsGuessUnique("a");
-            
+
             Assert.False(isValidGuess);
             Assert.Contains(result.CorrectGuesses[0], "a");
         }
@@ -97,7 +97,7 @@ namespace Hangman.UnitTests.Game
 
             result.PrintGameState();
 
-            Assert.Contains("_ oo_ _ o_",output.ToString());
+            Assert.Contains("_ oo_ _ o_", output.ToString());
 
             result.IsGuessCorrect("c");
             result.IsGuessCorrect("k");
