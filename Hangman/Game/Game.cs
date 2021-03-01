@@ -16,7 +16,7 @@ namespace Hangman.Game
         {
             WordList = new[] { "Abacus", "Triangle", "Car", "Airline", "Tree", "Population" };
             LivesRemaining = numberOfLives;
-            Answer = WordList[new Random().Next(5)].ToLower();
+            Answer = WordList[new Random().Next(WordList.Length)].ToLower();
             CorrectGuesses = new StringBuilder();
             AllGuesses = new List<string>();
         }
