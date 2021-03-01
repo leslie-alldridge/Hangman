@@ -37,8 +37,8 @@ namespace Hangman.UnitTests.Game
             var guess = result.IsGuessCorrect("o");
 
             Assert.True(guess);
-            Assert.NotEmpty(result.Guesses);
-            Assert.Equal(0, result.Guesses.IndexOf("o"));
+            Assert.NotEmpty(result.AllGuesses);
+            Assert.Contains("o", result.CorrectGuesses.ToString());
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Hangman.UnitTests.Game
             var guess = result.IsGuessCorrect("o");
 
             Assert.False(guess);
-            Assert.Empty(result.Guesses);
+            Assert.Equal(string.Empty, result.CorrectGuesses.ToString());
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Hangman.UnitTests.Game
             var guess = result.IsGuessCorrect("Boil");
 
             Assert.False(guess);
-            Assert.Empty(result.Guesses);
+            Assert.Equal(string.Empty, result.CorrectGuesses.ToString());
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Hangman.UnitTests.Game
 
 
             Assert.False(isValidGuess);
-            Assert.Contains(result.Guesses[0], "a");
+            Assert.Contains(result.CorrectGuesses[0], "a");
         }
 
         [Fact]

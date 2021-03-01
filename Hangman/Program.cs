@@ -15,7 +15,7 @@ namespace Hangman.Game
 
                 if (input == "q")
                 {
-                    // User wants to quit the game
+                    // User has requested to quit the game
                     break;
                 }
 
@@ -27,15 +27,14 @@ namespace Hangman.Game
 
                     while (game.LivesRemaining > 0)
                     {
-                        // Has the player won the game?
-                        if (game.GenerateGameState() == game.Answer)
+                        if (game.IsGameWon())
                         {
-                            Console.WriteLine($"You have guessed {game.Answer} correctly!");
+                            Console.WriteLine($"\nYou have guessed {game.Answer} correctly!");
 
                             break;
                         }
 
-                        Console.WriteLine("Please guess a letter:");
+                        Console.WriteLine("\nPlease guess a letter:");
 
                         var guess = Console.ReadKey().KeyChar.ToString();
                         var isUnique = game.IsGuessUnique(guess);
@@ -47,8 +46,7 @@ namespace Hangman.Game
                             if (isCorrect)
                             {
                                 Console.WriteLine($"\nYou correctly guessed: {guess}");
-
-                                game.GenerateGameState();
+                                game.PrintGameState();
                             }
                             else
                             {
@@ -57,14 +55,14 @@ namespace Hangman.Game
                                 // Has the player run out of lives?
                                 if (game.LivesRemaining == 0)
                                 {
-                                    Console.WriteLine($"You've run out of lives. The answer was: {game.Answer}.");
+                                    Console.WriteLine($"\nYou've run out of lives. The answer was: {game.Answer}.");
 
                                     break;
                                 }
                                 else
                                 {
                                     Console.WriteLine($"\n{guess} was not correct. {game.LivesRemaining} lives remain.");
-                                    game.GenerateGameState();
+                                    game.PrintGameState();
                                 }
                             }
                         }

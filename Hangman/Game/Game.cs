@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hangman.Game
@@ -10,8 +11,8 @@ namespace Hangman.Game
         public string[] FailurePhrasesList { get; }
         public int LivesRemaining { get; set; }
         public string Answer { get; set; }
-
-        public List<string> Guesses { get; set; }
+        public StringBuilder CorrectGuesses { get; set; }
+        public List<string> AllGuesses { get; private set; }
 
         public HangmanGame(int numberOfLives)
         {
@@ -33,35 +34,38 @@ namespace Hangman.Game
 
             Answer = WordList[new Random().Next(5)].ToLower();
 
-            Guesses = new List<string>();
+            CorrectGuesses = new StringBuilder();
 
+            AllGuesses = new List<string>();
         }
 
-        internal string GenerateGameState()
+        internal void UpdateGuess(string guess)
         {
-            var builder = new StringBuilder();
-
             foreach (char c in Answer)
             {
-                if (Guesses.Contains(c.ToString()))
+                if (c.ToString() == guess)
                 {
-                    builder.Append(c);
-                }
-                else
-                {
-                    builder.Append("_ ");
+                    CorrectGuesses.Append(guess);
                 }
             }
+        }
 
-            Console.WriteLine($"\n{builder}");
-            return builder.ToString();
-        } // this can go into the method below...
+        public bool IsGameWon()
+        {
+            var guessedSet = new HashSet<char>(CorrectGuesses.ToString());
+            var answerSet = new HashSet<char>(Answer);
+
+            return answerSet.SetEquals(guessedSet);
+        }
 
         public bool IsGuessCorrect(string guess)
         {
+            // Keep track of all guesses so we can block duplicates in IsGuessUnique
+            if (!AllGuesses.Contains(guess)) AllGuesses.Add(guess);
+
             if (Answer.Contains(guess))
             {
-                Guesses.Add(guess.ToLower());
+                UpdateGuess(guess.ToLower());
                 return true;
             }
 
@@ -70,12 +74,31 @@ namespace Hangman.Game
 
         public bool IsGuessUnique(string guess)
         {
-            return !Guesses.Contains(guess);
+            return !AllGuesses.Contains(guess);
         }
 
         public void ReduceLivesRemaining()
         {
             LivesRemaining -= 1;
+        }
+
+        public void PrintGameState()
+        {
+            var builder = new StringBuilder();
+
+            foreach (char c in Answer)
+            {
+                if (CorrectGuesses.ToString().Contains(c.ToString()))
+                {
+                    builder.Append($"{c}");
+                }
+                else
+                {
+                    builder.Append("_ ");
+                }
+            }
+
+            Console.WriteLine(builder);
         }
     }
 }
